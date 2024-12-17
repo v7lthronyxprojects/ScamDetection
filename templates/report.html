@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>v7lthronyx ScamDetection نسخه ی اول بتا - Security Scan Report</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #1a1a1a;
+            color: #00ff00;
+            margin: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section {
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .risk-high { color: #ff0000; }
+        .risk-medium { color: #ffff00; }
+        .risk-low { color: #00ff00; }
+        h1, h2, h3 {
+            color: #00ff00;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Security Scan Report for {{ url }}</h1>
+        <div class="section">
+            <h2>Risk Score: {{ risk_score }}%</h2>
+            <div class="risk-{{ 'high' if risk_score >= 70 else 'medium' if risk_score >= 40 else 'low' }}">
+                Risk Level: {{ 'HIGH' if risk_score >= 70 else 'MEDIUM' if risk_score >= 40 else 'LOW' }}
+            </div>
+        </div>
+        
+        {% for category, checks in results.items() %}
+        <div class="section">
+            <h3>{{ category }}</h3>
+            <ul>
+            {% for check, result in checks.items() %}
+                <li>{{ check }}: {{ '✅' if result else '❌' }} - {{ details.get(check, '') }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+        
+        {% if recommendations %}
+        <div class="section">
+            <h3>Recommendations</h3>
+            <ul>
+            {% for rec in recommendations %}
+                <li>{{ rec }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
